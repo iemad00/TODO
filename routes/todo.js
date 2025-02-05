@@ -58,4 +58,15 @@ router.patch("/:id", (req, res) => {
     res.status(200).json(todo);
 });
 
+// Delete a to-do item
+router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+    const index = todos.findIndex((t) => t.id === id);
+    if (index === -1) {
+        return res.status(404).json({ error: "To-do item not found." });
+    }
+    todos.splice(index, 1);
+    res.status(204).send(); 
+});
+
 module.exports = router;
