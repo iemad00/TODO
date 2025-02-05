@@ -30,5 +30,32 @@ router.post("/", validateTodoInput, (req, res) => {
     res.status(201).json(newTodo);
 });
 
+// We use PATCH for partial updates (e.g., updating only the 'completed' field)
+router.patch("/:id", (req, res) => {
+    const { id } = req.params;
+    const { title, completed } = req.body;
+
+    const todo = todos.find((t) => t.id === id);
+    if (!todo) {
+        return res.status(404).json({ error: "To-do item not found." });
+    }
+
+    // Update only provided fields
+    if (title !== undefined) {
+        if (typeof title !== "string" || title.trim() === "") {
+            return res.status(400).json({ error: "Title must be a non-empty string" });
+        }
+        todo.title = title;
+    }
+
+    if (completed !== undefined) {
+        if (typeof completed !== "boolean") {
+            return res.status(400).json({ error: "Completed must be a boolean value" });
+        }
+        todo.completed = completed;
+    }
+
+    res.status(200).json(todo);
+});
 
 module.exports = router;
