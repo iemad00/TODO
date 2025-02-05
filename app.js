@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const todoRouter = require("./routes/todo");
+const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
@@ -10,16 +12,10 @@ app.use(morgan("dev")); // Logging
 
 const port = process.env.PORT || 3000;
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: "An internal server error occurred." });
-});
-
-
-const todoRouter = require("./routes/todo");
+// Routes
 app.use("/todo", todoRouter);
 
+// Register the global error handler
+app.use(errorHandler);
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
