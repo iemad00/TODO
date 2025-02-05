@@ -10,6 +10,11 @@ app.use(morgan("dev")); // Logging
 
 const port = process.env.PORT || 3000;
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: "An internal server error occurred." });
+});
+
 
 const todoRouter = require("./routes/todo");
 app.use("/todo", todoRouter);
